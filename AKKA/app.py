@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from AKKA.extensions import db
   # import db from the new file
-from models import Message   # you can safely import now
+from AKKA.models import Message
+   # you can safely import now
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET', 'dev-secret')
@@ -59,4 +60,5 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
