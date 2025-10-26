@@ -114,7 +114,8 @@ footer {
 
 /* responsive */
 @media (max-width: 640px) {
-  .nav-links { display: none; } /* keep simple for now */
+   /* keep simple for now */
   .hero h1 { font-size: 1.6rem; }
   .container { padding: 12px; }
 }
+
