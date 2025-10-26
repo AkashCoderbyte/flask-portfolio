@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
-from extensions import db   # import db from the new file
+from AKKA.extensions import db
+  # import db from the new file
 from models import Message   # you can safely import now
 
 app = Flask(__name__)
@@ -58,3 +59,4 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
