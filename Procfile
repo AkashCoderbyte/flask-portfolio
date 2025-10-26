@@ -1,2 +1,3 @@
-web: gunicorn app:app --chdir AKKA
+web: gunicorn AKKA.app:app
+
 
