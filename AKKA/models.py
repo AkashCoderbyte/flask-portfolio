@@ -1,4 +1,5 @@
-from extensions import db
+from AKKA.extensions import db
+
 from datetime import datetime
 
 class Message(db.Model):
@@ -10,3 +11,4 @@ class Message(db.Model):
 
     def __repr__(self):
         return f'<Message {self.id} from {self.name}>'
+
