@@ -112,10 +112,4 @@ footer {
   color: #6b7280;
 }
 
-/* responsive */
-@media (max-width: 640px) {
-   /* keep simple for now */
-  .hero h1 { font-size: 1.6rem; }
-  .container { padding: 12px; }
-}
 
