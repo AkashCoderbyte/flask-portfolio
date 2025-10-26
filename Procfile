@@ -1,2 +1,2 @@
-web: gunicorn AKKA.app:app
+web: gunicorn wsgi:app
 
