@@ -55,24 +55,32 @@ def contact():
             flash("Please fill all fields.", "error")
             return redirect(url_for('contact'))
 
-        # ✅ Save to DB
-        msg = Message(name=name, email=email, message=message_text)
-        db.session.add(msg)
+        # Save to database
+        new_message = Message(name=name, email=email, message=message_text)
+        db.session.add(new_message)
         db.session.commit()
 
-        # ✅ Send email via Gmail
-        mail_msg = MailMessage(
-            subject=f"New contact message from {name}",
-            recipients=[os.environ.get('MAIL_USERNAME')],
-            body=f"From: {name} <{email}>\n\nMessage:\n{message_text}"
-        )
-        mail.send(mail_msg)
+        # Try sending email
+        try:
+            email_msg = Message(
+                subject=f"New message from {name}",
+                sender=os.environ.get('MAIL_USERNAME'),
+                recipients=[os.environ.get('MAIL_USERNAME')],  # Sends to yourself
+                body=f"From: {name}\nEmail: {email}\n\nMessage:\n{message_text}"
+            )
+            mail.send(email_msg)
+            flash("Thanks! Your message has been sent successfully.", "success")
 
-        flash("Thanks! Your message has been sent.", "success")
+        except Exception as e:
+            print("Error sending email:", e)
+            flash("Something went wrong while sending the email. Please try again later.", "error")
+
         return redirect(url_for('contact'))
 
     return render_template('contact.html')
 
 
+
 if __name__ == '__main__':
     app.run(debug=True)
+
