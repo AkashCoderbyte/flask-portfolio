@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from AKKA.extensions import db, mail   # ✅ imported mail also
 from AKKA.models import Message
-from flask_mail import Message as MailMessage  # ✅ renamed to avoid confusion
+
+from flask_mail import Mail, Message as MailMessage
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET', 'dev-secret')
@@ -86,5 +87,6 @@ except Exception as e:
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
