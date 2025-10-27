@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
-from AKKA.extensions import db
-  # import db from the new file
+from AKKA.extensions import db, mail   # ✅ imported mail also
 from AKKA.models import Message
-   # you can safely import now
+from flask_mail import Message as MailMessage  # ✅ renamed to avoid confusion
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET', 'dev-secret')
@@ -15,8 +14,17 @@ db_path = os.path.join(basedir, 'portfolio.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize db with app
+# ✅ Gmail configuration (ADD THIS BELOW)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')   # stored in Render
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')   # stored in Render
+app.config['MAIL_DEFAULT_SENDER'] = ('Portfolio Site', os.environ.get('MAIL_USERNAME'))
+
+# Initialize database & mail
 db.init_app(app)
+mail.init_app(app)
 
 # Example projects
 PROJECTS = [
@@ -27,7 +35,6 @@ PROJECTS = [
 
 with app.app_context():
     db.create_all()
-
 
 @app.route('/')
 def home():
@@ -48,9 +55,18 @@ def contact():
             flash("Please fill all fields.", "error")
             return redirect(url_for('contact'))
 
+        # ✅ Save to DB
         msg = Message(name=name, email=email, message=message_text)
         db.session.add(msg)
         db.session.commit()
+
+        # ✅ Send email via Gmail
+        mail_msg = MailMessage(
+            subject=f"New contact message from {name}",
+            recipients=[os.environ.get('MAIL_USERNAME')],
+            body=f"From: {name} <{email}>\n\nMessage:\n{message_text}"
+        )
+        mail.send(mail_msg)
 
         flash("Thanks! Your message has been sent.", "success")
         return redirect(url_for('contact'))
@@ -60,5 +76,3 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
