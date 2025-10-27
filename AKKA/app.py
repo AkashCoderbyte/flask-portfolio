@@ -62,31 +62,27 @@ def contact():
         db.session.commit()
 
         # Try sending email
-       # Try sending email
-# Try sending email
-try:
-    email_msg = MailMessage(   # ✅ changed to MailMessage
-        subject=f"New message from {name}",
-        sender=os.environ.get('MAIL_USERNAME'),
-        recipients=[os.environ.get('MAIL_USERNAME')],  # Sends to yourself
-        body=f"From: {name}\nEmail: {email}\n\nMessage:\n{message_text}"
-    )
-    mail.send(email_msg)
-    flash("Thanks! Your message has been sent successfully.", "success")
-
-except Exception as e:
-    print("Error sending email:", e)
-    flash("Something went wrong while sending the email. Please try again later.", "error")
-
+        try:
+            email_msg = MailMessage(   # ✅ use MailMessage
+                subject=f"New message from {name}",
+                sender=os.environ.get('MAIL_USERNAME'),
+                recipients=[os.environ.get('MAIL_USERNAME')],
+                body=f"From: {name}\nEmail: {email}\n\nMessage:\n{message_text}"
+            )
+            mail.send(email_msg)
+            flash("Thanks! Your message has been sent successfully.", "success")
+        except Exception as e:
+            print("Error sending email:", e)
+            flash("Something went wrong while sending the email. Please try again later.", "error")
 
         return redirect(url_for('contact'))
 
     return render_template('contact.html')
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
